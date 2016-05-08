@@ -1,5 +1,5 @@
 # kcptun
-TCP流转换为KCP+UDP流，用于***高丢包***环境中的数据传输，工作示意图:      
+TCP流转换为KCP+UDP流，[下载地址](https://github.com/xtaci/kcptun/releases/latest) 用于***高丢包***环境中的数据传输，工作示意图:      
 ```
                 +---------------------------------------+
                 |                                       |
