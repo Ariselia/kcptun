@@ -67,7 +67,8 @@ func (sc *secureConn) Close() (err error) {
 // handle multiplex-ed connection
 func handleMux(conn *kcp.UDPSession, key, target string, tuncrypt bool) {
 	conn.SetRetries(50)
-	conn.SetWindowSize(1024, 1024)
+	conn.SetWindowSize(102400, 102400)
+	//conn.SetMtu(1452)
 	conn.SetDeadline(time.Now().Add(2 * time.Second))
 	// read iv
 	iv := make([]byte, 2*aes.BlockSize)
@@ -104,12 +105,14 @@ func handleMux(conn *kcp.UDPSession, key, target string, tuncrypt bool) {
 			log.Println(err)
 			return
 		}
-		p2, err := net.Dial("tcp", target)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		go handleClient(p1, p2)
+		go handleConnection(p1)
+		/*
+			p2, err := net.Dial("tcp", target)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			go handleClient(p1, p2)*/
 	}
 }
 

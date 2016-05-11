@@ -158,7 +158,8 @@ func main() {
 		checkError(err)
 		kcpconn.SetRetries(50)
 		log.Println("remote address:", c.String("remoteaddr"))
-		kcpconn.SetWindowSize(128, 1024)
+		kcpconn.SetWindowSize(12800, 102400)
+		//kcpconn.SetMtu(1452)
 
 		// generate & send iv
 		iv := make([]byte, 2*aes.BlockSize)
