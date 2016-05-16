@@ -130,6 +130,11 @@ func main() {
 			Name:  "tuncrypt",
 			Usage: "enable tunnel encryption, adds extra secrecy for data transfer",
 		},
+		cli.IntFlag{
+			Name:  "mtu",
+			Value: 1452,
+			Usage: "set mtu",
+		},
 	}
 	myApp.Action = func(c *cli.Context) {
 		log.Println("version:", VERSION)
@@ -159,7 +164,7 @@ func main() {
 		kcpconn.SetRetries(50)
 		log.Println("remote address:", c.String("remoteaddr"))
 		kcpconn.SetWindowSize(12800, 102400)
-		//kcpconn.SetMtu(1452)
+		kcpconn.SetMtu(c.Int("mtu"))
 
 		// generate & send iv
 		iv := make([]byte, 2*aes.BlockSize)

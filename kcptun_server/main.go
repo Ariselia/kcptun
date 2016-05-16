@@ -68,7 +68,7 @@ func (sc *secureConn) Close() (err error) {
 func handleMux(conn *kcp.UDPSession, key, target string, tuncrypt bool) {
 	conn.SetRetries(50)
 	conn.SetWindowSize(102400, 102400)
-	//conn.SetMtu(1452)
+	conn.SetMtu(mtu)
 	conn.SetDeadline(time.Now().Add(2 * time.Second))
 	// read iv
 	iv := make([]byte, 2*aes.BlockSize)
@@ -142,6 +142,8 @@ func handleClient(p1, p2 net.Conn) {
 	}
 }
 
+var mtu int
+
 func main() {
 	rand.Seed(int64(time.Now().Nanosecond()))
 	myApp := cli.NewApp()
@@ -174,6 +176,11 @@ func main() {
 			Name:  "tuncrypt",
 			Usage: "enable tunnel encryption, adds extra secrecy for data transfer",
 		},
+		cli.IntFlag{
+			Name:  "mtu",
+			Value: 1452,
+			Usage: "set mtu",
+		},
 	}
 	myApp.Action = func(c *cli.Context) {
 		log.Println("version:", VERSION)
@@ -190,7 +197,7 @@ func main() {
 			log.Println("unrecognized mode:", c.String("mode"))
 			return
 		}
-
+		mtu = c.Int("mtu")
 		lis, err := kcp.ListenEncrypted(mode, c.String("listen"), []byte(c.String("key")))
 		if err != nil {
 			log.Fatal(err)
